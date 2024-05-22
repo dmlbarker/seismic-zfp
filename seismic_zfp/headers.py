@@ -69,10 +69,14 @@ class HeaderwordInfo:
                     self.table[hw_code] = (0, hw_code)
 
                 # Create required numpy int arrays
-                cdp_x, cdp_y, iline_headers, xline_headers = self.get_zgy_header_arrays()
+                cdp_x, cdp_y, iline_headers, xline_headers, source_group_scalar = self.get_zgy_header_arrays()
 
                 # Keep them in memory until file is ready for them to be written
-                self.headers_dict = {181: cdp_x, 185: cdp_y, 189: iline_headers, 193: xline_headers}
+                self.headers_dict = {70: source_group_scalar,
+                                     181: cdp_x,
+                                     185: cdp_y,
+                                     189: iline_headers,
+                                     193: xline_headers}
 
             else:
                 raise RuntimeError("Only SEG-Y and ZGY files supported for header generation")
@@ -151,7 +155,8 @@ class HeaderwordInfo:
                                    + xline_idx * northing_inc_xl)
                           ).astype(np.intc)
 
-        return cdp_x, cdp_y, iline_headers, xline_headers
+        source_group_scalar = -100
+        return cdp_x, cdp_y, iline_headers, xline_headers, source_group_scalar
 
     def __repr__(self):
         output = ""
